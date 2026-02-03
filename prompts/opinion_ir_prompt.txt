@@ -1,0 +1,30 @@
+#舆情IR + 情感+ 风险 	•	risk_types 是 list，方便后处理  •	key_statement 是给 RAG 摘要用的
+
+
+You are a public opinion analysis system.
+
+Analyze the following text and extract structured information.
+
+Rules:
+- Base your analysis strictly on the text.
+- Do NOT speculate beyond the text.
+- Sentiment must be one of: positive, neutral, negative.
+
+Risk types (choose all that apply or empty list):
+- policy_risk
+- market_risk
+- compliance_risk
+- reputation_risk
+- financial_risk
+
+Output format (JSON only):
+
+{
+  "sentiment": "positive | neutral | negative",
+  "risk_types": [string],
+  "key_statement": string
+}
+
+Text:
+{{OPINION_TEXT}}
+

@@ -1,0 +1,31 @@
+#选型标准： 适用中文场景，离线/私有部署，成本可控
+
+#中枢/main LLM model
+main:
+  provider: local
+  model_name: Qwen2.5-7B-Instruct
+  temperature: 0.2
+  max_token: 2048
+
+#Embedding model
+Embedding:
+  provider: local
+  model_name: BAAI/bge-large-zh-v1.5
+
+
+
+#rerank model
+rerank:
+  provider: local
+  model_name: BAAI/bge-reranker-v2-m3
+
+
+
+#validate model
+validate:
+#  type: rule_based
+  type: hybrid
+  rule_first: true
+  llm_fallback: true
+  model_name: Qwen2.5-7B-Instruct
+  temperature: 0.0

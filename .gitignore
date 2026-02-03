@@ -1,0 +1,50 @@
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+env/
+
+# ===== Environment & Secrets =====
+.env
+.env.*
+!.env.example
+
+# ===== IDE =====
+.pycharm/
+.idea/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+._*
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Data (large or sensitive) =====
+data/raw/
+data/processed/
+data/samples/
+
+# ===== Vector store / local data_schema.yaml =====
+#milvus_data/
+#chroma/
+faiss_index/
+
+# ===== Test artifacts =====
+.coverage
+.pytest_cache/
+
+# ===== Temp =====
+tmp/
+
+# ===== Build / packaging =====
+*.egg-info/
+*.egg
+dist/
+build/

@@ -1,0 +1,6 @@
+#vector store information
+vector_store:
+  type: faiss
+  host: ${VECTOR_HOST}
+  port: ${VECTOR_PORT}
+  api_key: ${VECTOR_API_KEY}

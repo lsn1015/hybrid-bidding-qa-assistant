@@ -1,0 +1,137 @@
+# data_schema.yaml
+# 全系统数据结构定义：包含向量库集合（RAG）与关系型表（SQL）
+# 用途：显式表达数据契约，支持自动化校验、文档生成、团队对齐
+
+vector_collections:
+  # ---------------------------------------------------------------------------
+  # 3.1 政策信息（Policy Documents – RAG）
+  # ---------------------------------------------------------------------------
+  policy_chunks:
+    description: "政策文件分块，用于语义检索"
+    id_format: "policy_{year}_{domain}_{index:04d}"  # e.g., policy_2023_eco_0003
+    text_field: "text"
+    embedding_model: "BAAI/bge-large-zh-v1.5"
+    embedding_dim: 1024
+    metadata:
+      doc_id: TEXT                # 源文档ID，用于chunk聚合
+      chunk_index: INTEGER         # 当前块序号（从0或1开始需统一）
+      total_chunks: INTEGER        # 文档总块数
+      policy_title: TEXT           # 政策标题
+      source_web: TEXT             # 来源网站域名
+      publish_date: DATE           # 发布日期 (YYYY-MM-DD)
+      effective_date: DATE         # 生效日期 (YYYY-MM-DD)
+      policy_level: ENUM[national, provincial, municipal]  # 标准化枚举值
+      policy_domains: LIST[TEXT]   # 领域标签列表，e.g., ["environment", "manufacturing", "tax"]
+
+  # ---------------------------------------------------------------------------
+  # 3.2 舆情信息（Public Opinion – RAG）
+  # ---------------------------------------------------------------------------
+  opinion_chunks:
+    description: "舆情内容分块，用于风险分析与语义检索"
+    id_format: "opinion_{date}_{index:02d}"  # e.g., opinion_2024_0512_02
+    text_field: "text"
+    embedding_model: "BAAI/bge-large-zh-v1.5"
+    embedding_dim: 1024
+    metadata:
+      doc_id: TEXT                # 舆情文档ID
+      chunk_index: INTEGER         # 块序号
+      total_chunks: INTEGER        # 总块数
+      title: TEXT                  # 舆情标题
+      source_web: TEXT             # 来源网站
+      publish_date: DATE           # 发布日期
+      related_company: TEXT        # 关联公司名称（用于与company_master联动）
+      sentiment: ENUM[positive, neutral, negative, unknown]  # 情感倾向
+      risk_type: ENUM[public_opinion, compliance, financial, unknown]  # 风险类型
+
+sql_tables:
+  # ---------------------------------------------------------------------------
+  # 4.1 企业主数据（统一实体）
+  # ---------------------------------------------------------------------------
+  company_master:
+    description: "企业核心主数据，作为招标人/中标人/供应商的统一引用实体"
+    columns:
+      company_id: VARCHAR(64) PRIMARY KEY
+      company_name: VARCHAR(255) NOT NULL
+      establish_date: DATE
+      registered_capital: VARCHAR(64)  # 保留原始格式（如"500万元"）
+      address: VARCHAR(255)
+      insured_employees: INTEGER
+      business_scope: TEXT
+      source_web: VARCHAR(64)
+
+  # ---------------------------------------------------------------------------
+  # 4.2 招标项目主表
+  # ---------------------------------------------------------------------------
+  tender_project:
+    description: "招标项目基本信息"
+    columns:
+      project_id: VARCHAR(64) PRIMARY KEY
+      project_name: VARCHAR(255) NOT NULL
+      publish_date: DATE
+      amount: DECIMAL(15,2)  # 单位：元
+      location: VARCHAR(128)
+      source_web: VARCHAR(64)
+
+  # ---------------------------------------------------------------------------
+  # 4.3 招标参与方关系表
+  # ---------------------------------------------------------------------------
+  tender_party:
+    description: "项目与企业的角色关联（多对多）"
+    columns:
+      id: INT PRIMARY KEY AUTO_INCREMENT
+      project_id: VARCHAR(64) FOREIGN KEY REFERENCES tender_project(project_id)
+      company_id: VARCHAR(64) FOREIGN KEY REFERENCES company_master(company_id)
+      role: VARCHAR(32)  # 枚举值: '招标人', '代理机构', '中标人'
+
+  # ---------------------------------------------------------------------------
+  # 4.4 招标联系人信息
+  # ---------------------------------------------------------------------------
+  tender_contact:
+    description: "项目联系人信息，支持一对多"
+    columns:
+      id: INT PRIMARY KEY AUTO_INCREMENT
+      project_id: VARCHAR(64) FOREIGN KEY REFERENCES tender_project(project_id)
+      company_id: VARCHAR(64) FOREIGN KEY REFERENCES company_master(company_id)
+      contact_name: VARCHAR(64)
+      phone: VARCHAR(32)
+
+  # ---------------------------------------------------------------------------
+  # 4.5 供应商与报价信息
+  # ---------------------------------------------------------------------------
+  supplier_quote:
+    description: "商品/物料报价信息，用于价格比对"
+    columns:
+      quote_id: VARCHAR(64) PRIMARY KEY
+      company_id: VARCHAR(64) FOREIGN KEY REFERENCES company_master(company_id)
+      material_name: VARCHAR(128)  # 物料名称
+      brand: VARCHAR(128)          # 品牌
+      specs: JSON                  # 规格参数（结构化存储）
+      price: DECIMAL(12,2)         # 单价，单位：元
+      collect_time: DATETIME       # 报价采集时间
+      source_web: VARCHAR(64)
+
+
+intermediate_representations:
+  unified_query_ir:
+    description: "统一查询中间表示（支持 RAG/SQL/Hybrid）"
+    ir_version: "1.0"
+    schema:
+      query_type: ENUM[rag, sql, hybrid]
+      entity_type: TEXT  # policy, opinion, company, tender, material, price
+      fallback_enabled: BOOLEAN
+      original_query: TEXT
+
+      structured_conditions:
+        company_name: TEXT
+        project_name: TEXT
+        material_name: TEXT
+        brand: TEXT
+        location: TEXT
+        amount_range:
+          min: FLOAT
+          max: FLOAT
+        date_range:
+          publish_start: DATE
+          publish_end: DATE
+
+      unstructured_keywords: LIST[TEXT]

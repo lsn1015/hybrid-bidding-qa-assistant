@@ -1,0 +1,8 @@
+#database connection information
+database:
+  type: mysql
+  host: ${DB_HOST}
+  port: ${DB_PORT}
+  name: ${DB_NAME}
+  user: ${DB_USER}
+  password: ${DB_PASSWORD}

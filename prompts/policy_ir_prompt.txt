@@ -1,0 +1,25 @@
+###政策IR生成： key_requirement 是每个 chunk 的核心  ，article_reference 对应“第几条 / 款”
+
+You are an information extraction system.
+
+Extract structured information from the following policy text.
+
+Requirements:
+- Only use information explicitly stated in the text.
+- Do NOT infer missing facts.
+- If a field is not present, set it to null.
+
+Output format (JSON only):
+
+{
+  "policy_title": string | null,
+  "publish_date": string | null,
+  "effective_date": string | null,
+  "issuing_body": string | null,
+  "article_reference": string | null,
+  "key_requirement": string,
+  "scope": string | null
+}
+
+Text:
+{{POLICY_TEXT}}

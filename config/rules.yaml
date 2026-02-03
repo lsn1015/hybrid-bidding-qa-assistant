@@ -1,0 +1,87 @@
+# regulation/ threshold control, 规定行为
+# System behavior is governed by a centralized rule configuration
+# to ensure safety, consistency, and deterministic execution across LLM components.
+
+
+router:
+  confidence_threshold: 0.7
+
+  intent_map:
+    policy_query:
+      route: rag
+    opinion_query:
+      router: rag
+    tender_query:
+      router: sql
+    company_query:
+      router: sql
+    items_query:
+      router: sql
+    hybrid_query:
+      router: hybrid
+
+
+rag:
+  embedding_top_k: 20
+  rerank_top_n: 3
+
+  max_context_tokens: 1200
+
+  chunk_overlap_allowed: false
+
+  citation_required: true
+
+
+ir:
+  required_fields:
+    - table
+    - filters
+    - select
+
+  max_filters: 5
+
+  allowed_ops:
+    - "="
+    - ">"
+    - "<"
+    - ">="
+    - "<="
+    - "between"
+    - "like"
+
+  allow_fuzzy: false
+
+
+sql:
+  allowed_commands:
+    - select
+
+  forbidden_keywords:
+    - insert
+    - update
+    - delete
+    - drop
+    - alter
+    - truncate
+
+  max_limit: 100
+
+
+normalize:
+  date_format: "%Y-%m-%d"
+
+  amount:
+    unit: CNY
+    max_value: 1000000000
+    min_value: 0
+
+  phone:
+    country_code: "+86"
+
+
+answer:
+  require_summary: true
+  require_source: true
+
+  uncertainty_response: >
+    当前信息不足以给出确定结论，以下为已检索到的相关内容供参考。

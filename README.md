@@ -23,7 +23,7 @@
 ## 二、目录结构
 
 ```
-Solution10/
+hybrid_bidding_qa_assistant/
 ├── README.md
 ├── requirements.txt
 ├── .env.example                 # 环境变量模板，复制为 .env 后填写
@@ -109,7 +109,7 @@ Solution10/
 ### 1. 创建虚拟环境并安装依赖
 
 ```bash
-cd /path/to/Solution10
+cd /path/to/hybrid_bidding_qa_assistant
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt

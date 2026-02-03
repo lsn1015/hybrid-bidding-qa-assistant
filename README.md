@@ -210,29 +210,3 @@ uvicorn api.main:app --host 0.0.0.0 --port 8000
 如遇问题，可先查看日志（`config/log_config.yaml` 中配置的路径）及 `/query` 的 `debug` 字段定位环节。
 
 ---
-
-
-```bash
-cd /path/to/Solution10
-
-# 若尚未初始化
-git init
-
-# 添加所有文件（.gitignore 已排除 .env、data/raw、data/processed、logs 等）
-git add .
-git status   # 确认没有 .env、密码、大文件被加入
-
-git commit -m "feat: initial Hybrid Bidding QA Assistant"
-
-# 添加远程仓库（替换为你的 GitHub 用户名和仓库名）
-
-# 推送（首次推送主分支）
-git branch -M main
-git push -u origin main
-```
-
-### 3. 注意事项
-
-- **不要提交**：`.env`、数据库密码、API Key；`.gitignore` 已包含 `.env`。
-- **不会上传**：`data/raw/`、`data/processed/`、`data/samples/`、`logs/`，避免大文件与敏感数据进仓库。
-- 其他人克隆后需自行：`cp .env.example .env` 并填写、准备 MySQL 与原始数据、运行 `preprocess_main.py` 或按需加载向量。

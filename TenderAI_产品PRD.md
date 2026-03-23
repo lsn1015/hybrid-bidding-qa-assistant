@@ -101,12 +101,16 @@
 
 
 ### 4.3 Query处理流程
+系统采用 RAG + SQL 的混合检索架构，以解决：
 
+- 结构化数据查询（SQL）
+- 非结构化文本理解（RAG）
+  
 <p align="center">
   <img src="https://github.com/user-attachments/assets/3f52ac84-f738-44c4-9f60-5c1041cfc668" width="1350"/>
 </p>
 <p align="center">
-  <em>图4-3 用户提问处理流程（RAG + SQL混合链路）</em>
+  <em>图4-3 用户提问处理流程（包含结构化判断SQL与检索策略分流RAG）</em>
 </p>
 
 ### 4.4 IR中间层设计

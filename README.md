@@ -1,6 +1,6 @@
-# Hybrid Bidding QA Assistant
+# 招标行业混合 RAG + SQL 智能问答助手 ｜ Hybrid Bidding QA Assistant
 
-招标行业混合 RAG + SQL 智能问答助手。面向企业多角色（采购、销售、投融资、管理层），通过融合**结构化数据（SQL）**与**非结构化知识（RAG）**，根据问题类型动态选择检索路径，帮助用户高效发现项目机会、匹配供应商/投资人。
+面向企业多角色（采购、销售、投融资、管理层），通过融合**结构化数据（SQL）**与**非结构化知识（RAG）**，根据问题类型动态选择检索路径，帮助用户高效发现项目机会、匹配供应商/投资人。
 ### 文档入口(最新版本）：[产品PRD](https://github.com/lsn1015/hybrid-bidding-qa-assistant/blob/main/TenderAI_%E4%BA%A7%E5%93%81PRD.md)
 - **用户流程图**：[Figma 流程图](https://ribbon-factor-19389736.figma.site/)
 - **产品原型**：[Figma 原型](https://mango-sheep-74625288.figma.site/)
